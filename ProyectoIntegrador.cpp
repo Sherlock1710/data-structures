@@ -94,7 +94,19 @@ void actualizarUnidades(Producto* encontrado, int u){
 	encontrado->unidades = u;	
 }
 
-void eliminarProducto(){
+void eliminarProducto(Producto* &cab, Producto* eliminar){
+	Producto* ant = cab;
+	
+	if(cab==eliminar){
+		cab = eliminar->sig;
+		delete eliminar;
+	}else{
+		while(ant->sig!=eliminar){
+			ant=ant->sig;
+		}
+		ant->sig = eliminar->sig;
+		delete eliminar;
+	}
 	
 }
 
@@ -102,7 +114,8 @@ int main() {
     Producto* cab = NULL;
     Producto* fin = NULL;
     Producto* encontrado;
-    int op, op2, id, id_enc, p, u, c, n_prod;
+    Producto* eliminar;
+    int op, op2, id, id_enc, p, u, c;
     string n;
     bool cond = true;
 
@@ -135,24 +148,16 @@ int main() {
                 cin >> c;
             
                 for (int i = 1; i <= c; i++) {
-                	n_prod+=1;
-                    cout << "-----------------------Producto " << n_prod << "-----------------------\n";
-                    cout << "Ingrese el Id del producto: \n";
-                    cin >> id;
+                	id+=1;
+                    cout << "-----------------------Producto " << id<< "-----------------------\n";
+                    
                     cin.ignore();
-                    
-                    if (buscarProducto(cab, id) != NULL) {
-                        cout << "El producto con el Id " << id << " ya existe.\n";
-                        n_prod-=1;
-                        continue;
-                    }
-                    
                     cout << "Ingrese el nombre del producto: \n";
                     getline(cin, n);
                     
                     if (buscarProductoPorNombre(cab, n) != NULL) {
                         cout << "El producto con el nombre " << n << " ya existe.\n";
-                        n_prod-=1;
+                        id-=1;
                         continue;
                     }
                     
@@ -188,7 +193,7 @@ int main() {
                             	cout<<"Ingrese el id del producto para agregar el nuevo antes \n";
                             	cin>>id_enc;
                                 encontrado = buscarProducto(cab, id);    
-                                insertarMedio(cab, encontrado, id, n, p, u);
+                                insertarMedio(cab, encontrado, id_enc, n, p, u);
                                 break;
                                 
                             case 3:
@@ -209,16 +214,19 @@ int main() {
                 break;
                 
             case 3:
-            	cout<<"Ingrese el Id del producto para actulizar sus unidades \n";
+            	cout<<"Ingrese el Id del producto para actulizar sus unidades: \n";
 				cin>>id;
 				encontrado = buscarProducto(cab, id);
-				
 				cout<<"Ingrese el nuevo valor para las unidades: \n";
 				cin>>u;
 				actualizarUnidades(encontrado, u);
             break;
             
             case 4:
+            	cout<<"Ingrese el id del producto a eliminar: \n";
+				cin>>id;
+				eliminar = buscarProducto(cab, id);
+				eliminarProducto(cab, eliminar);
             break;
             
             case 5:
