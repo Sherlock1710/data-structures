@@ -36,17 +36,53 @@ void mostrarLista(Producto* cab){
     cout << "\n";
 }
 
-void insertarFinal(Producto* &cab, Producto* &fin, int id, string n, int p, int u){
+void insertarFinal(Producto* &fin, int id, string n, int p, int u){
     Producto* nuevo = new Producto;
-    
     nuevo->id = id;
     nuevo->nombre = n;
     nuevo->precio = p;
     nuevo->unidades = u;
     nuevo->sig = NULL;
-    
     fin->sig = nuevo;
     fin = nuevo;    
+}
+
+void insertarInicio(Producto* &cab, int id, string n, int p, int u){
+	Producto* nuevo = new Producto;
+	nuevo->id = id;
+	nuevo->nombre = n;
+	nuevo->precio = p;
+	nuevo->unidades = u;
+	nuevo->sig = cab->sig;
+	cab = nuevo;
+}
+
+void insertarMedio(Producto* cab, Producto* encontrado, int id, string n, int p, int u){
+	Producto* nuevo = new Producto;
+	nuevo->id = id;
+	nuevo->nombre = n;
+	nuevo->precio = p;
+	nuevo->unidades = u;
+	
+	Producto* ant = cab;
+	
+	while(ant!=encontrado){
+		ant = ant->sig;
+	}
+	
+	nuevo->sig = ant->sig;
+	ant->sig = nuevo;
+	
+}
+
+Producto* buscarProducto(Producto* cab, int id){
+	Producto* aux = cab;
+	
+	while(aux->id!=id){
+		aux = aux->sig;
+	}
+	
+	return aux;
 }
 
 int main(){
@@ -102,7 +138,7 @@ int main(){
                     if(cab == NULL){
                         crearLista(cab, fin, id, n, p, u);
                     }else{
-                        insertarFinal(cab, fin, id, n, p, u);
+                        insertarFinal(fin, id, n, p, u);
                     }
                 } 
                 
