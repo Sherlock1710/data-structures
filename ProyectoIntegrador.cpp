@@ -110,6 +110,40 @@ void eliminarProducto(Producto* &cab, Producto* eliminar){
 	
 }
 
+void aplicarDescuento(Producto* encontrado, int porcentaje){
+		int precio = encontrado->precio; 
+		int descuento = precio*porcentaje/100;
+		encontrado->precio = precio-descuento;
+}
+
+void consultarExistencias(Producto* cab, int u){
+	Producto* aux = cab;
+	cout<<"==========================================================\n";
+	cout<<"PRODUCTOS CON MENOS DE "<<u<<" UNIDADES: \n";
+	while(aux != NULL){
+		if(aux->unidades<=u){
+			cout << "Id: " << aux->id << "\n";
+	        cout << "Nombre: " << aux->nombre << "\n";
+	        cout << "Precio: " << aux->precio << "\n";
+	        cout << "Unidades: " << aux->unidades << "\n";
+	        cout << "----------------------------------------------------------\n";
+		}
+		aux = aux->sig;
+	}
+	
+}
+
+int valorTotalInventario(Producto* cab){
+	Producto* aux = cab;
+	int sum = 0;
+	
+	while(aux != NULL){
+		sum+= aux->precio*aux->unidades;
+		aux = aux->sig;
+	}
+	return sum;
+}
+
 int main() {
     Producto* cab = NULL;
     Producto* fin = NULL;
@@ -192,8 +226,8 @@ int main() {
                             case 2:
                             	cout<<"Ingrese el id del producto para agregar el nuevo antes \n";
                             	cin>>id_enc;
-                                encontrado = buscarProducto(cab, id);    
-                                insertarMedio(cab, encontrado, id_enc, n, p, u);
+                                encontrado = buscarProducto(cab, id_enc);    
+                                insertarMedio(cab, encontrado, id, n, p, u);
                                 break;
                                 
                             case 3:
@@ -206,7 +240,6 @@ int main() {
                         }
                     }
                 }
-                
                 break;
             
             case 2: 
@@ -217,25 +250,52 @@ int main() {
             	cout<<"Ingrese el Id del producto para actulizar sus unidades: \n";
 				cin>>id;
 				encontrado = buscarProducto(cab, id);
-				cout<<"Ingrese el nuevo valor para las unidades: \n";
-				cin>>u;
-				actualizarUnidades(encontrado, u);
+				
+				if(encontrado!=NULL){
+					cout<<"Ingrese el nuevo valor para las unidades: \n";
+					cin>>u;
+					actualizarUnidades(encontrado, u);
+				}else{
+					cout<<"El producto con Id "<<id<<", no existe. \n";
+				}
+				
             break;
             
             case 4:
             	cout<<"Ingrese el id del producto a eliminar: \n";
 				cin>>id;
 				eliminar = buscarProducto(cab, id);
-				eliminarProducto(cab, eliminar);
+				if (eliminar != NULL){
+					eliminarProducto(cab, eliminar);
+				}else{
+					cout<<"El producto con Id "<<id<<", no existe. \n";
+				}
+				
             break;
             
             case 5:
+            	cout<<"Ingrese el id del producto para aplicar el descuento: \n";
+            	cin>>id;
+            	encontrado = buscarProducto(cab, id);
+            	if(encontrado!=NULL){
+            		cout<<"Ingrese el descuento que desea realizar: \n";
+	            	cin>>p;
+	            	aplicarDescuento(encontrado, p);
+					cout<<"Se aplico un "<<p<<"% de descuento al producto con Id"<<" 1\n";
+				}else{
+					cout<<"El producto con Id "<<id<<", no existe. \n";
+				}
+            	
             break;
             
             case 6:	
+            	cout<<"Ingrese el numero minimo de unidades para filtrar el producto: \n";
+            	cin>>u;
+            	consultarExistencias(cab, u);
             break;
             
             case 7:
+            	cout<<"El valor total del inventario es de "<<valorTotalInventario(cab)<<"$ \n";
             break;
             
             case 8: 
